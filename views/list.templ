@@ -1,0 +1,35 @@
+package views
+
+import "projekt-paw/data"
+
+var user string
+
+templ List(username string, games []data.Game) {
+	<html>
+		<head>
+			@Htmx()
+		</head>
+		<body>
+			<h1>games list</h1>
+			<h3>{ username }</h3>
+			<button class="btn_green" hx-post={ "/create/" + username }>Create</button>
+			<div id="list-container">
+				for _, g := range games {
+					@ListItem(g)
+				}
+			</div>
+			@HtmxHandleErrors()
+		</body>
+	</html>
+}
+
+templ ListItem(game data.Game) {
+	<div class="game-list-item">
+		<h4>
+			{ game.Player1Name + "'s game" }
+		</h4>
+		<button class="btn_green" disable?={ game.Started }>
+			Join
+		</button>
+	</div>
+}

@@ -1,0 +1,16 @@
+package views
+
+templ HtmxHandleErrors() {
+	<script>
+	document.body.addEventListener("htmx:beforeOnLoad", function (e) {
+		if (Math.floor(e.detail.xhr.status / 100) == 4) {
+			evt.detail.shouldSwap = true;
+			evt.detail.isError = false;
+		}
+	});
+</script>
+}
+
+templ Htmx() {
+	<script src="https://unpkg.com/htmx.org@2.0.2"></script>
+}

@@ -1,0 +1,17 @@
+package views
+
+templ Index() {
+	<html>
+		<head>
+			<script src="js/login.js"></script>
+		</head>
+		<body>
+			<div id="input_container">
+				<h1>guess who</h1>
+				<input id="inp_username" name="username" placeholder="enter username"/>
+				<button onclick="loginAnonymous('inp_username')">OK</button>
+				<div id="login-target"></div>
+			</div>
+		</body>
+	</html>
+}
