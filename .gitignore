@@ -1,4 +1,5 @@
 env
 build
 */*_templ.go
-
+tmp/*
+/tmp

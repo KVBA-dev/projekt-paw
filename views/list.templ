@@ -11,14 +11,25 @@ templ List(username string, games []data.Game) {
 		</head>
 		<body>
 			<h1>games list</h1>
-			<h3>{ username }</h3>
-			<button class="btn_green" hx-post={ "/create/" + username }>Create</button>
+			<h3 id="name-container"></h3>
+			<button class="btn_green" hx-post="/create" hx-swap="outerHTML" hx-include="#name-container">Create</button>
 			<div id="list-container">
 				for _, g := range games {
 					@ListItem(g)
 				}
 			</div>
 			@HtmxHandleErrors()
+			<script>
+		const name = localStorage.getItem("name");
+		document.getElementById("name-container").innerHTML = name;
+
+		document.addEventListener("htmx:beforeSend", function (e) {
+			if (e.detail.requestConfig.path !== "/create") {
+				return;
+			}
+			// TODO: attach user data for this request
+		});
+	</script>
 		</body>
 	</html>
 }

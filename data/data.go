@@ -1,6 +1,6 @@
 package data
 
-import "github.com/labstack/echo/v4"
+import "database/sql"
 
 type User struct {
 	Name string
@@ -20,5 +20,5 @@ type Game struct {
 
 type State struct {
 	Games []Game
-	Ctx   echo.Context
+	Db    *sql.DB
 }

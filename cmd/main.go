@@ -19,7 +19,7 @@ func main() {
 	fmt.Println("success!")
 	defer db.Close()
 
-	state := &data.State{Games: make([]data.Game, 0), Ctx: nil}
+	state := &data.State{Games: make([]data.Game, 0), Db: db}
 
 	e := echo.New()
 	e.Static("/css", "css")
@@ -29,23 +29,20 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return handlers.RenderView(200, c, views.Index())
 	})
+	e.GET("/list", func(c echo.Context) error {
+		return handlers.ShowList(c, state, 1)
+	})
 
 	e.POST("/login", func(c echo.Context) error {
-		state.Ctx = c
 		return handlers.Login(c, state)
 	})
 	e.POST("loginanon", func(c echo.Context) error {
-		state.Ctx = c
 		return handlers.Login(c, state)
 	})
-
-	e.POST("/create/:name", func(c echo.Context) error {
-		state.Ctx = c
-		return handlers.CreateGame(state)
+	e.POST("/create", func(c echo.Context) error {
+		return handlers.CreateGame(c, state)
 	})
-
-	e.GET("/list", func(c echo.Context) error { return handlers.ShowList(state, 1) })
 	//-------------------------------------
 
-	e.Logger.Fatal(e.Start(":8080"))
+	e.Logger.Info(e.Start(":8080"))
 }
