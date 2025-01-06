@@ -19,7 +19,7 @@ func main() {
 	fmt.Println("success!")
 	defer db.Close()
 
-	state := &data.State{Games: make([]data.Game, 0), Db: db}
+	state := &data.State{Games: make([]*data.Game, 0), Db: db}
 
 	e := echo.New()
 	e.Static("/css", "css")
@@ -32,16 +32,23 @@ func main() {
 	e.GET("/list", func(c echo.Context) error {
 		return handlers.ShowList(c, state, 1)
 	})
+	e.GET("/game", func(c echo.Context) error {
+		return handlers.GetGamePage(c, state)
+	})
+	e.GET("/gamews", func(c echo.Context) error {
+		return handlers.HandleWS(c, state)
+	})
 
 	e.POST("/login", func(c echo.Context) error {
-		return handlers.Login(c, state)
+		return handlers.LoginAnonymous(c, state)
 	})
-	e.POST("loginanon", func(c echo.Context) error {
-		return handlers.Login(c, state)
+	e.POST("/loginanon", func(c echo.Context) error {
+		return handlers.LoginAnonymous(c, state)
 	})
 	e.POST("/create", func(c echo.Context) error {
 		return handlers.CreateGame(c, state)
 	})
+
 	//-------------------------------------
 
 	e.Logger.Info(e.Start(":8080"))

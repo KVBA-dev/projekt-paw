@@ -1,0 +1,38 @@
+package views
+
+import "projekt-paw/data"
+
+script GameJS(gameid string) {
+const socket = new WebSocket(`ws://${window.location.host}/gamews?game=${gameid}`)
+
+socket.addEventListener("open", () => {
+const name = sessionStorage.getItem("name")
+const id = sessionStorage.getItem("id")
+const gameid = sessionStorage.getItem("gameid")
+socket.send(`d.${name}.${id}`)
+})
+
+socket.addEventListener("message", (e) => {
+const msg = e.data
+console.log(msg)
+})
+
+socket.addEventListener("close", (e) => {
+alert("game closed")
+history.back()
+})
+
+window.addEventListener("beforeunload", (e) => {
+socket.close()
+})
+}
+
+templ Game(game *data.Game) {
+<html>
+
+<head></head>
+
+<body onload={ GameJS(game.Id) }></body>
+
+</html>
+}

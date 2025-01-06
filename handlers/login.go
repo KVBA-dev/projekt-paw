@@ -1,9 +1,10 @@
 package handlers
 
 import (
-	"github.com/labstack/echo/v4"
-	"html"
+	"fmt"
 	"projekt-paw/data"
+
+	"github.com/labstack/echo/v4"
 	// "projekt-paw/views"
 )
 
@@ -12,9 +13,9 @@ type LoginReply struct {
 	Name string `json:"name"`
 }
 
-func Login(ctx echo.Context, state *data.State) error {
-	userName := html.EscapeString(ctx.Request().FormValue("username"))
-	ctx.Logger().Print("user logged in anonymously")
+func LoginAnonymous(ctx echo.Context, state *data.State) error {
+	userName := ctx.QueryParam("username")
+	ctx.Logger().Print(fmt.Sprintf("user %s logged in anonymously", userName))
 	reply := &LoginReply{
 		Id:   69,
 		Name: userName,

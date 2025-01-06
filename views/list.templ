@@ -4,43 +4,40 @@ import "projekt-paw/data"
 
 var user string
 
-templ List(username string, games []data.Game) {
-	<html>
-		<head>
-			@Htmx()
-		</head>
-		<body>
-			<h1>games list</h1>
-			<h3 id="name-container"></h3>
-			<button class="btn_green" hx-post="/create" hx-swap="outerHTML" hx-include="#name-container">Create</button>
-			<div id="list-container">
-				for _, g := range games {
-					@ListItem(g)
-				}
-			</div>
-			@HtmxHandleErrors()
-			<script>
-		const name = localStorage.getItem("name");
-		document.getElementById("name-container").innerHTML = name;
+templ List(username string, games []*data.Game) {
+<html>
 
-		document.addEventListener("htmx:beforeSend", function (e) {
-			if (e.detail.requestConfig.path !== "/create") {
-				return;
-			}
-			// TODO: attach user data for this request
-		});
-	</script>
-		</body>
-	</html>
+<head>
+	@Htmx()
+</head>
+
+<body>
+	<script src="js/create.js"></script>
+	<h1>games list</h1>
+	<h3 id="name-container"></h3>
+	<button class="btn_green" onclick="create()">Create</button>
+	<div id="list-container">
+		for _, g := range games {
+		@ListItem(g)
+		}
+	</div>
+	@HtmxHandleErrors()
+</body>
+
+</html>
 }
 
-templ ListItem(game data.Game) {
-	<div class="game-list-item">
-		<h4>
-			{ game.Player1Name + "'s game" }
-		</h4>
-		<button class="btn_green" disable?={ game.Started }>
-			Join
-		</button>
-	</div>
+script JoinGame(id string) {
+join(id)
+}
+
+templ ListItem(game *data.Game) {
+<div class="game-list-item">
+	<h4>
+		{ game.Player1.Name + "'s game" }
+	</h4>
+	<button class="btn_green" disable?={ game.Started } onclick={ JoinGame(game.Id) }>
+		Join
+	</button>
+</div>
 }
