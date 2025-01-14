@@ -13,6 +13,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+const delim string = "»"
+
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
 		return true
@@ -80,7 +82,8 @@ func HandleWS(ctx echo.Context, state *data.State) error {
 	}
 
 	player := &data.Player{
-		Conn: conn,
+		Conn:      conn,
+		Character: -1,
 	}
 
 	game.Mutex.Lock()
@@ -102,45 +105,99 @@ func HandleWS(ctx echo.Context, state *data.State) error {
 			break
 		}
 		mesg := string(msg[:])
+		fmt.Println("Message received:", mesg)
 		switch mesg[0] {
 		// TODO: change delimiter from . to a rarer character
 		case 'd':
-			/* INFO: user sends data upon opening connection
+			/* INFO: d - user sends data upon opening connection
 			   format is d.name.id
 			*/
-			tokens := strings.Split(mesg, ".")
+			tokens := strings.Split(mesg, delim)
 			player.Name = tokens[1]
 			id, err := strconv.ParseInt(tokens[2], 10, 64)
 			if err != nil {
 				break
 			}
 			player.Id = id
+			err = game.LogBroadcast(fmt.Sprintf("Joined: %s", player.Name))
 
 			if game.Player2 == nil {
 				err = game.SendTo(game.Player1, "w")
+				err = game.LogTo(game.Player1, "Waiting for other player...")
 			} else {
 				err = game.Broadcast("s")
+				err = game.LogBroadcast("Select your flag")
 			}
 			if err != nil {
 				break
 			}
-		case 'a':
-			/* INFO: user asks another one
-			   format is s.question
+		case 's':
+			/* INFO: s - user selected the character
+			   format is s.number
 			*/
-		case 'r':
-			/* INFO: user replies
+			tokens := strings.Split(mesg, delim)
+			c, err := strconv.ParseInt(tokens[1], 10, 8)
+			if err != nil {
+				break
+			}
+			player.Character = int8(c)
+			game.Mutex.Lock()
+			if game.Player1.Character >= 0 && game.Player2.Character >= 0 {
+				game.Begin()
+			}
+			game.Mutex.Unlock()
+
+		case 'a', 'r':
+			/* INFO: a - user asks
+			   format is a.question
+			*/
+
+			/* INFO: r - user replies
 			   format is r.y if yes or r.n if no
 			*/
+			fmt.Println(mesg)
+			var recv *data.Player
+			if player == game.Player1 {
+				recv = game.Player2
+			} else {
+				recv = game.Player1
+			}
+			game.SendTo(recv, mesg)
+			if mesg[0] == 'r' {
+				a := "Yes"
+				if mesg[2] == 'n' {
+					a = "No"
+				}
+				game.LogBroadcast(fmt.Sprintf("Answer: %s", a))
+				game.SwitchTurn()
+			} else {
+				a := strings.Split(mesg, delim)[1]
+				game.LogBroadcast(fmt.Sprintf("%s asks: %s", player.Name, a))
+			}
 		case 'g':
 			/* INFO: user guesses
 			   format is g.guess
 			*/
-		case 'e':
-			/* INFO: user responds to a guess
-			   format is alternative to r: e.y or e.n
-			   if e.y is sent, the game ends
-			*/
+			tokens := strings.Split(mesg, delim)
+			c, err := strconv.ParseInt(tokens[1], 10, 8)
+			if err != nil {
+				break
+			}
+			var recv *data.Player
+			if player == game.Player1 {
+				recv = game.Player2
+			} else {
+				recv = game.Player1
+			}
+			if recv.Character == int8(c) {
+				game.SendTo(player, fmt.Sprintf("r%sy", delim))
+				game.LogBroadcast(fmt.Sprintf("Correct! %s wins!", player.Name))
+				game.Broadcast("q")
+			} else {
+				game.SendTo(player, fmt.Sprintf("r%sn", delim))
+				game.LogBroadcast("Wrong guess!")
+				game.SwitchTurn()
+			}
 		default:
 		}
 	}

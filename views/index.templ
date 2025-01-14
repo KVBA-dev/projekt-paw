@@ -6,12 +6,20 @@ templ Index() {
 			<script src="js/login.js"></script>
 		</head>
 		<body>
+			<h1>guess who</h1>
 			<div id="input_container">
-				<h1>guess who</h1>
 				<input id="inp_username" name="username" placeholder="enter username"/>
 				<button onclick="loginAnonymous('inp_username')">OK</button>
-				<div id="login-target"></div>
 			</div>
+			<div id="login_container">
+				<input id="inp_login" name="login" placeholder="login"/>
+				<br/>
+				<input id="inp_password" name="password" type="password" placeholder="password"/>
+				<br/>
+				<button onclick="login('inp_login', 'inp_password')">Login</button>
+				<button onclick="register('inp_login', 'inp_password')">Register</button>
+			</div>
+			<p id="login-error"></p>
 		</body>
 	</html>
 }

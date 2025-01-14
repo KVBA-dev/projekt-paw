@@ -1,38 +1,78 @@
 package views
 
-import "projekt-paw/data"
-
-script GameJS(gameid string) {
-const socket = new WebSocket(`ws://${window.location.host}/gamews?game=${gameid}`)
-
-socket.addEventListener("open", () => {
-const name = sessionStorage.getItem("name")
-const id = sessionStorage.getItem("id")
-const gameid = sessionStorage.getItem("gameid")
-socket.send(`d.${name}.${id}`)
-})
-
-socket.addEventListener("message", (e) => {
-const msg = e.data
-console.log(msg)
-})
-
-socket.addEventListener("close", (e) => {
-alert("game closed")
-history.back()
-})
-
-window.addEventListener("beforeunload", (e) => {
-socket.close()
-})
-}
+import (
+"fmt"
+"projekt-paw/data"
+"strconv"
+)
 
 templ Game(game *data.Game) {
+{{
+flags := []string{
+"AE", "AF", "AL", "AM", "AR", "AT", "AU", "BA", "BD", "BE",
+"BH", "BR", "BG", "BW", "CA", "CD", "CH", "CI", "DK", "ES",
+"EE", "FI", "FR", "GA", "GH", "FO", "GR", "HN", "HU", "ID",
+"IE", "JP", "JM", "LA", "LT", "MD", "NG", "NL", "NO", "NZ",
+"PL", "PW", "RO", "SE", "SI", "SK", "SO", "TN", "UA", "VN",
+}
+}}
 <html>
 
-<head></head>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script src="js/game.js"></script>
+	<style>
+		.unchecked {
+			background-color: #ff8080;
+		}
+	</style>
+</head>
 
-<body onload={ GameJS(game.Id) }></body>
+<body onload="game()">
+	@FlagButtons(flags, 5)
+	<div id="selected-container">
+		<span>selected: </span>
+		<button id="selected" disabled></button>
+	</div>
+	<div id="question-input-container" style="display: none;">
+		<input id="question-input" placeholder="ask a yes/no question" />
+		<button onclick="sendQuestion()">Ask</button>
+		<br />
+		<button onclick="prepareGuess()">I'm ready to guess</button>
+	</div>
+	<div id="yes-no" style="display: none;">
+		<p id="question"></p>
+		<br />
+		<button id="yes" onclick="reply(true)">Yes</button>
+		<button id="no" onclick="reply(false)">No</button>
+	</div>
+	<div>
+		<div id="opponent-info"></div>
+	</div>
+	<p id="gamelog"></p>
+</body>
 
 </html>
+}
+
+templ FlagButtons(flags []string, rows uint) {
+{{ cols := len(flags) / int(rows) }}
+for i := range rows {
+<div>
+	for j := range cols {
+	{{ id := j + int(i)*cols }}
+	@FlagButton(flags[id], true, id)
+	}
+</div>
+}
+}
+
+templ FlagButton(flag string, caption bool, id int) {
+<button id={ "btn-" + flag } class="btn-flag" data-id={ strconv.Itoa(id) }>
+	<img src={ fmt.Sprintf("https://flagsapi.com/%s/flat/64.png", flag) } />
+	if caption {
+	<br />
+	<span>{ flag }</span>
+	}
+</button>
 }

@@ -19,7 +19,7 @@ func main() {
 	fmt.Println("success!")
 	defer db.Close()
 
-	state := &data.State{Games: make([]*data.Game, 0), Db: db}
+	state := &data.State{Games: make([]*data.Game, 0), Db: db, SessionId: 0}
 
 	e := echo.New()
 	e.Static("/css", "css")
@@ -40,10 +40,13 @@ func main() {
 	})
 
 	e.POST("/login", func(c echo.Context) error {
-		return handlers.LoginAnonymous(c, state)
+		return handlers.Login(c, state)
 	})
 	e.POST("/loginanon", func(c echo.Context) error {
 		return handlers.LoginAnonymous(c, state)
+	})
+	e.POST("/register", func(c echo.Context) error {
+		return handlers.Register(c, state)
 	})
 	e.POST("/create", func(c echo.Context) error {
 		return handlers.CreateGame(c, state)
