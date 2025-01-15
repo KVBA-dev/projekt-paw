@@ -30,6 +30,10 @@ func ShowList(ctx echo.Context, state *data.State, page uint) error {
 	return RenderView(200, ctx, views.List("", shownGames))
 }
 
+func GetList(ctx echo.Context, state *data.State) error {
+	return RenderView(200, ctx, views.RenderList(state.Games))
+}
+
 func CreateGame(ctx echo.Context, state *data.State) error {
 	game := &data.Game{
 		Id:      uuid.New().String(),
@@ -116,7 +120,7 @@ func HandleWS(ctx echo.Context, state *data.State) error {
 			player.Name = tokens[1]
 			id, err := strconv.ParseInt(tokens[2], 10, 64)
 			if err != nil {
-				break
+				game.Broadcast(fmt.Sprintf("x%sinvalid data - game closed", delim))
 			}
 			player.Id = id
 			err = game.LogBroadcast(fmt.Sprintf("Joined: %s", player.Name))
@@ -125,8 +129,10 @@ func HandleWS(ctx echo.Context, state *data.State) error {
 				err = game.SendTo(game.Player1, "w")
 				err = game.LogTo(game.Player1, "Waiting for other player...")
 			} else {
+				err = game.LogTo(player, fmt.Sprintf("Your opponent is %s", game.Player1.Name))
 				err = game.Broadcast("s")
 				err = game.LogBroadcast("Select your flag")
+				game.Started = true
 			}
 			if err != nil {
 				break
@@ -155,7 +161,6 @@ func HandleWS(ctx echo.Context, state *data.State) error {
 			/* INFO: r - user replies
 			   format is r.y if yes or r.n if no
 			*/
-			fmt.Println(mesg)
 			var recv *data.Player
 			if player == game.Player1 {
 				recv = game.Player2
@@ -165,7 +170,7 @@ func HandleWS(ctx echo.Context, state *data.State) error {
 			game.SendTo(recv, mesg)
 			if mesg[0] == 'r' {
 				a := "Yes"
-				if mesg[2] == 'n' {
+				if []rune(mesg)[2] == 'n' {
 					a = "No"
 				}
 				game.LogBroadcast(fmt.Sprintf("Answer: %s", a))

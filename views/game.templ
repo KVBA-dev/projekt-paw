@@ -19,37 +19,40 @@ flags := []string{
 <html>
 
 <head>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	@JQuery()
 	<script src="js/game.js"></script>
-	<style>
-		.unchecked {
-			background-color: #ff8080;
-		}
-	</style>
+	<link rel="stylesheet" href="css/styles.css" />
 </head>
 
 <body onload="game()">
-	@FlagButtons(flags, 5)
-	<div id="selected-container">
-		<span>selected: </span>
-		<button id="selected" disabled></button>
+	<div class="container">
+		@FlagButtons(flags, 5)
+		<div id="selected-container">
+			<span>selected: </span>
+			<button id="selected" disabled></button>
+		</div>
+		<div id="game-bottom-container">
+			<div class="game-bottom-item">
+				<div id="question-input-container" style="display: none;">
+					<input id="question-input" placeholder="ask a yes/no question" />
+					<button onclick="sendQuestion()">Ask</button>
+					<br />
+					<button onclick="prepareGuess()">I'm ready to guess</button>
+				</div>
+				<div id="yes-no" style="display: none;">
+					<p id="question"></p>
+					<div id="yes-no-buttons">
+						<button id="yes" onclick="reply(true)" class="evenw">Yes</button>
+						<button id="no" onclick="reply(false)" class="evenw">No</button>
+					</div>
+				</div>
+				<div>
+					<div id="opponent-info"></div>
+				</div>
+			</div>
+			<p id="gamelog" class="game-bottom-item"></p>
+		</div>
 	</div>
-	<div id="question-input-container" style="display: none;">
-		<input id="question-input" placeholder="ask a yes/no question" />
-		<button onclick="sendQuestion()">Ask</button>
-		<br />
-		<button onclick="prepareGuess()">I'm ready to guess</button>
-	</div>
-	<div id="yes-no" style="display: none;">
-		<p id="question"></p>
-		<br />
-		<button id="yes" onclick="reply(true)">Yes</button>
-		<button id="no" onclick="reply(false)">No</button>
-	</div>
-	<div>
-		<div id="opponent-info"></div>
-	</div>
-	<p id="gamelog"></p>
 </body>
 
 </html>
@@ -68,7 +71,7 @@ for i := range rows {
 }
 
 templ FlagButton(flag string, caption bool, id int) {
-<button id={ "btn-" + flag } class="btn-flag" data-id={ strconv.Itoa(id) }>
+<button id={ "btn-" + flag } class="btn-flag" data-id={ strconv.Itoa(id) } disabled>
 	<img src={ fmt.Sprintf("https://flagsapi.com/%s/flat/64.png", flag) } />
 	if caption {
 	<br />

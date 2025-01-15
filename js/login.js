@@ -1,6 +1,10 @@
 function loginAnonymous(id_username) {
 	const username = document.getElementById(id_username).value;
-	let id, name;
+	// why, javascript? why?
+	if (!username) {
+		document.getElementById("login-error").innerText = "Something went wrong"
+		return
+	}
 	fetch(`/loginanon?username=${username}`, {
 		method: "POST",
 	}).then(r => {
@@ -10,10 +14,8 @@ function loginAnonymous(id_username) {
 		}
 		return r.json();
 	}).then(r => {
-		id = r.id;
-		name = r.name;
-		sessionStorage.setItem("id", id);
-		sessionStorage.setItem("name", name);
+		sessionStorage.setItem("sessionId", r.session_id);
+		sessionStorage.setItem("name", username);
 		window.open(`http://${window.location.host}/list`, "_self");
 	}).catch(_ => { })
 }
@@ -39,9 +41,7 @@ function login(id_login, id_password) {
 		return r.json()
 	}).then(r => {
 		sessionStorage.setItem("sessionId", r.session_id)
-		if (r.user_id > -1) {
-			sessionStorage.setItem("userId", r.user_id)
-		}
+		sessionStorage.setItem("userId", r.user_id)
 		sessionStorage.setItem("name", r.username)
 		window.open(`http://${window.location.host}/list`, "_self");
 	}).catch(_ => { })

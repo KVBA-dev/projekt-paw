@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+/*COMMON*/
+
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	margin: 0
+}
+
+button,
+p,
+span,
+h1,
+h3,
+h4 {
+	font-family: "Open Sans", sans-serif;
+}
+
+.container {
+	border: 2px solid black;
+	border-radius: 10px;
+	padding: 3%;
+}
+
+.horiz {
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+}
+
+.fullw {
+	width: 100%;
+}
+
+.evenw {
+	flex-grow: 1;
+}
+
+
+button {
+	padding: 5px;
+	border: 1px solid black;
+	border-radius: 3px;
+}
+
+.topmargin {
+	margin-top: 5%;
+}
+
+/*INDEX*/
+
+#login-buttons {
+	display: flex;
+}
+
+#login-buttons>button {
+	flex-grow: 1;
+}
+
+#input_container,
+#login_container {
+	margin: 2%;
+}
+
+#login-error {
+	color: red;
+}
+
+/*LIST*/
+
+.list {
+	width: 70vw;
+}
+
+.game-list-item {
+	border: 2px solid gray;
+	border-radius: 10px;
+	padding: 2%;
+	display: flex;
+	flex-direction: column;
+	margin-left: 20%;
+	margin-right: 20%;
+}
+
+/*GAME*/
+
+.btn-flag {
+	margin: 2px;
+}
+
+.unchecked {
+	background-color: #ff8080;
+}
+
+.checked {
+	background-color: #80ff80;
+}
+
+.unchecked:hover {
+	background-color: #e07070;
+}
+
+.checked:hover {
+	background-color: #70e070;
+}
+
+#game-bottom-container {
+	display: flex;
+	flex-flow: row;
+}
+
+.game-bottom-item {
+	flex-grow: 1;
+}
+
+#selected-container {
+	display: flex;
+	flex-flow: column;
+}
+
+#yes-no-buttons {
+	display: flex;
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+#gamelog {
+	height: 8.4em;
+	line-height: 1.2em;
+	overflow: hidden;
+	white-space: pre;
+}
+
+/*BUTTONS*/
+
+.btn-green {
+	color: black;
+	background-color: rgba(21, 231, 100, 1);
+}
+
+.btn-green:hover:enabled {
+	background-color: rgba(14, 185, 75, 1);
+}
+
+.btn-green:disabled {
+	background-color: rgba(21, 231, 100, 0.5);
+}
+
+.btn-white {
+	color: black;
+	background-color: white;
+}
+
+.btn-white:hover {
+	background-color: rgba(200, 200, 200, 1);
+}

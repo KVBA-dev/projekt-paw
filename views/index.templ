@@ -1,25 +1,42 @@
 package views
 
 templ Index() {
-	<html>
-		<head>
-			<script src="js/login.js"></script>
-		</head>
-		<body>
-			<h1>guess who</h1>
+<html>
+
+<head>
+	<script src="js/login.js"></script>
+	<link href="css/styles.css" rel="stylesheet" />
+</head>
+
+<body>
+	<div class="container">
+		<h1>guess who</h1>
+		<div class="horiz">
 			<div id="input_container">
-				<input id="inp_username" name="username" placeholder="enter username"/>
-				<button onclick="loginAnonymous('inp_username')">OK</button>
+				<span>play anonymously...</span>
+				<br />
+				<input id="inp_username" name="username" placeholder="username" />
+				<br />
+				<button onclick="loginAnonymous('inp_username')" class="btn-green topmargin"
+					style="width:100%;">OK</button>
 			</div>
 			<div id="login_container">
-				<input id="inp_login" name="login" placeholder="login"/>
-				<br/>
-				<input id="inp_password" name="password" type="password" placeholder="password"/>
-				<br/>
-				<button onclick="login('inp_login', 'inp_password')">Login</button>
-				<button onclick="register('inp_login', 'inp_password')">Register</button>
+				<span>...or log in</span>
+				<br />
+				<input id="inp_login" name="login" placeholder="login" />
+				<br />
+				<input id="inp_password" name="password" type="password" placeholder="password" />
+				<br />
+				<div id="login-buttons">
+					<button onclick="login('inp_login', 'inp_password')" class="btn-green topmargin">Login</button>
+					<button class="btn-white topmargin"
+						onclick="register('inp_login', 'inp_password')">Register</button>
+				</div>
 			</div>
-			<p id="login-error"></p>
-		</body>
-	</html>
+		</div>
+		<p id="login-error"></p>
+	</div>
+</body>
+
+</html>
 }

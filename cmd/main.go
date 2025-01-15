@@ -38,6 +38,9 @@ func main() {
 	e.GET("/gamews", func(c echo.Context) error {
 		return handlers.HandleWS(c, state)
 	})
+	e.GET("/gamelist", func(c echo.Context) error {
+		return handlers.GetList(c, state)
+	})
 
 	e.POST("/login", func(c echo.Context) error {
 		return handlers.Login(c, state)
