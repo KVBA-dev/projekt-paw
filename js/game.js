@@ -50,13 +50,18 @@ function game() {
 				// NOTE: start turn
 				toggleFlagButtons(true)
 				$('#question-input-container').show()
-				$('#question-input').text("")
+				$('#question-input').val("")
+				$('#question-input').on("keydown", function(ev) {
+					if (ev.key === "Enter") {
+						sendQuestion()
+					}
+				})
 
 				break
 			case "a":
 				// NOTE: receive question
 				$('#yes-no').show()
-				$('#question').text(`Opponent asked: ${msg[0]}`)
+				$('#question').text(msg[0])
 				break
 			case "r":
 				// NOTE: receive answer
@@ -108,10 +113,10 @@ function sendQuestion() {
 	const text = $('#question-input').val()
 	socket.send(`a${delim}${text}`)
 	$('#question-input-container').hide()
+	$('#question-input').unbind('keydown')
 }
 
 function reply(r) {
-	alert(typeof r)
 	let s = "n"
 	// i hate javascript
 	if (r) {

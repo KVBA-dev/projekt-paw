@@ -16,6 +16,7 @@ function loginAnonymous(id_username) {
 	}).then(r => {
 		sessionStorage.setItem("sessionId", r.session_id);
 		sessionStorage.setItem("name", username);
+		sessionStorage.setItem("userId", -1);
 		window.open(`http://${window.location.host}/list`, "_self");
 	}).catch(_ => { })
 }
@@ -68,9 +69,7 @@ function register(id_login, id_password) {
 		return r.json()
 	}).then(r => {
 		sessionStorage.setItem("sessionId", r.session_id)
-		if (r.user_id > -1) {
-			sessionStorage.setItem("userId", r.user_id)
-		}
+		sessionStorage.setItem("userId", r.user_id)
 		sessionStorage.setItem("name", r.username)
 		window.open(`http://${window.location.host}/list`, "_self");
 	}).catch(_ => { })

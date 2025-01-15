@@ -14,12 +14,18 @@ templ List(username string, games []*data.Game) {
 
 <body>
 	<script src="js/create.js"></script>
+	<script src="js/account.js"></script>
 	<div class="container list">
-		<h1>games list</h1>
-		<h3 id="name-container"></h3>
+		<div class="spread horiz">
+			<div>
+				<h1>games list</h1>
+				<h3 id="name-container"></h3>
+			</div>
+			<button onclick="logout()" class="shrinkwrap btn-red">Log out</button>
+		</div>
 		<button class="btn-green" onclick="create()">Create</button>
 		<button class="btn-white" hx-get="/gamelist" hx-target="#list-container">Refresh</button>
-		<div id="list-container">
+		<div id="list-container" hx-get="/gamelist" hx-trigger="every 3s">
 			@RenderList(games)
 		</div>
 	</div>

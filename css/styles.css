@@ -39,6 +39,16 @@ h4 {
 	flex-grow: 1;
 }
 
+.spread {
+	justify-content: space-between;
+	align-items: center;
+}
+
+.shrinkwrap {
+	width: fit-content;
+	height: fit-content;
+}
+
 
 button {
 	padding: 5px;
@@ -156,4 +166,13 @@ button {
 
 .btn-white:hover {
 	background-color: rgba(200, 200, 200, 1);
+}
+
+.btn-red {
+	color: white;
+	background-color: red;
+}
+
+.btn-red:hover {
+	background-color: rgba(200, 0, 0, 1);
 }

@@ -5,19 +5,30 @@ import (
 	"fmt"
 	"github.com/labstack/echo/v4"
 	_ "github.com/mattn/go-sqlite3"
+	"os"
 	"projekt-paw/data"
 	"projekt-paw/handlers"
 	"projekt-paw/views"
 )
 
 func main() {
-	fmt.Println("Opening database...")
 	db, err := sql.Open("sqlite3", "./database.db")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("success!")
 	defer db.Close()
+
+	var schema []byte
+	if schema, err = os.ReadFile("env/schema.sql"); err != nil {
+		fmt.Println("error: could not find schema.sql")
+		return
+	}
+
+	_, err = db.Exec(string(schema))
+	if err != nil {
+		fmt.Println("error on creating database:", err)
+		return
+	}
 
 	state := &data.State{Games: make([]*data.Game, 0), Db: db, SessionId: 0}
 

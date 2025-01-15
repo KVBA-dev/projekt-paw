@@ -25,6 +25,7 @@ flags := []string{
 </head>
 
 <body onload="game()">
+	<script src="js/account.js"></script>
 	<div class="container">
 		@FlagButtons(flags, 5)
 		<div id="selected-container">
@@ -34,16 +35,16 @@ flags := []string{
 		<div id="game-bottom-container">
 			<div class="game-bottom-item">
 				<div id="question-input-container" style="display: none;">
-					<input id="question-input" placeholder="ask a yes/no question" />
-					<button onclick="sendQuestion()">Ask</button>
+					<input id="question-input" class="evenw" placeholder="ask a yes/no question" />
+					<button onclick="sendQuestion()" class="btn-white">Ask</button>
 					<br />
-					<button onclick="prepareGuess()">I'm ready to guess</button>
+					<button onclick="prepareGuess()" class="btn-green">I'm ready to guess</button>
 				</div>
 				<div id="yes-no" style="display: none;">
 					<p id="question"></p>
 					<div id="yes-no-buttons">
-						<button id="yes" onclick="reply(true)" class="evenw">Yes</button>
-						<button id="no" onclick="reply(false)" class="evenw">No</button>
+						<button id="yes" onclick="reply(true)" class="evenw btn-green">Yes</button>
+						<button id="no" onclick="reply(false)" class="evenw btn-red">No</button>
 					</div>
 				</div>
 				<div>
