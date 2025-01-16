@@ -25,6 +25,16 @@ function login(id_login, id_password) {
 	const username = document.getElementById(id_login).value
 	const password = document.getElementById(id_password).value
 
+	if (!username || !password) {
+		document.getElementById("login-error").innerText = "Something went wrong"
+		return
+	}
+
+	if (!/[A-Za-z0-9-_]+/.test(username)) {
+		document.getElementById("login-error").innerText = "Something went wrong"
+		return
+	}
+
 	fetch(`/login`, {
 		method: "POST",
 		headers: {
@@ -51,6 +61,17 @@ function login(id_login, id_password) {
 function register(id_login, id_password) {
 	const username = document.getElementById(id_login).value
 	const password = document.getElementById(id_password).value
+
+	if (!username || !password) {
+		document.getElementById("login-error").innerText = "Something went wrong"
+		return
+	}
+
+	if (!/[A-Za-z0-9-_]+/.test(username)) {
+		document.getElementById("login-error").innerText = "Something went wrong"
+		return
+	}
+
 
 	fetch(`/register`, {
 		method: "POST",
